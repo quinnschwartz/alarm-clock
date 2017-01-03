@@ -7,17 +7,18 @@ var uglify = require('gulp-uglify');
 var utilities = require('gulp-util');
 var buildProduction = utilities.env.production;
 var jshint = require('gulp-jshint');
-var lib = require('bower-files')({
-  "overrides":{
-    "bootstrap" : {
-      "main": [
-        "less/bootstrap.less",
-        "dist/css/bootstrap.css",
-        "dist/js/bootstrap.js"
-      ]
-    }
-  }
-});
+var browserSync = require('browser-sync').create();
+var lib = require('bower-files')();
+//   "overrides":{
+//     "bootstrap" : {
+//       "main": [
+//         "less/bootstrap.less",
+//         "dist/css/bootstrap.css",
+//         "dist/js/bootstrap.js"
+//       ]
+//     }
+//   }
+// });
 
 gulp.task('bowerJS', function () {
   return gulp.src(lib.ext('js').files)
@@ -41,7 +42,7 @@ gulp.task('concatInterface', function() {
 });
 
 gulp.task('jsBrowserify', ['concatInterface'], function() {
-  return browserify({ entries: ['./js/alarm-interface.js'] })
+  return browserify({ entries: ['./tmp/allConcat.js'] })
     .bundle()
     .pipe(source('app.js'))
     .pipe(gulp.dest('./build/js'));
@@ -50,7 +51,7 @@ gulp.task('jsBrowserify', ['concatInterface'], function() {
 gulp.task("minifyScripts", ['jsBrowserify'], function(){
   return gulp.src(".build/js/app.js")
     .pipe(uglify())
-    .pipe(gulp.dest(".build.js"));
+    .pipe(gulp.dest(".build/js"));
 });
 
 gulp.task("clean", function(){
@@ -64,6 +65,25 @@ gulp.task("build", ['clean'], function(){
     gulp.start('jsBrowserify');
   }
   gulp.start('bower');
+});
+
+gulp.task('serve', function() {
+  browserSync.init({
+    server: {
+      baseDir: "./",
+      index: "index.html"
+    }
+  });
+  gulp.watch(['js/*.js'], ['jsBuild']);
+  gulp.watch(['bower.json'], ['bowerBuild']);
+});
+
+gulp.task('bowerBuild', ['bower'], function(){
+  browserSync.reload();
+});
+
+gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
+  browserSync.reload();
 });
 
 gulp.task('jshint', function(){

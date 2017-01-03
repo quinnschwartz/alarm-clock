@@ -5,5 +5,5 @@
 
 
 
-
-exports.alarmModule = Alarm;
+//
+// exports.alarmModule = Alarm;
