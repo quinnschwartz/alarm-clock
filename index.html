@@ -3,13 +3,20 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="build/css/vendor.css">
+    <link rel="stylesheet" href="css/styles.css">
     <script src="build/js/vendor.min.js"></script>
     <script src="bower_components/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="build/js/app.js"></script>
-    <title>Alarm Clock</title>
+    <title>Party Alarm</title>
   </head>
   <body>
-    <h3>Well look at the time! </h3>
-    <h3 id="time"></h3>
+    <h3>Current Time:</h3>
+    <div id="time"></div>
+    <form id="alarm">
+      <label for="alarmTime">Enter time at which you would like to party:</label>
+      <input id="alarmTime" type="time">
+      <button type="submit">Submit</button>
+    </form>
+    <p id="alarmOn"></p>
   </body>
 </html>
